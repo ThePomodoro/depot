@@ -2,6 +2,7 @@ require 'test_helper'
 
 class ProductTest < ActiveSupport::TestCase
   fixtures :products
+  
   def new_product(image_url)
   	Product.new(title: "My Book Title", description: "yyy", price: 1, image_url: image_url)
   end
@@ -17,6 +18,12 @@ class ProductTest < ActiveSupport::TestCase
 	end
   end
   
+  test "product title must be more than ten characters" do
+  	product = Product.new(title: "Under10", description: "yyy", price: 1, image_url: "zzz.jpg")
+  	assert product.invalid?
+  	assert_equal ["more than 10 chars please"],product.errors[:title]
+  end
+  
   test "product attributes must not be empty" do
   	product = Product.new
   	assert product.invalid?
@@ -30,13 +37,11 @@ class ProductTest < ActiveSupport::TestCase
   	product = Product.new(title: "My Book Title", description: "yyy", image_url: "zzz.jpg")
   	product.price = -1
   	assert product.invalid?
-  	assert_equal ["must be greater than or equal to 0.01"],
-  		product.errors[:price]
+  	assert_equal ["must be greater than or equal to 0.01"], product.errors[:price]
   		
   	product.price = 0
   	assert product.invalid?
-  	assert_equal ["must be greater than or equal to 0.01"],
-  		product.errors[:price]
+  	assert_equal ["must be greater than or equal to 0.01"], product.errors[:price]
   		
   	product.price = 1
   	assert product.valid?

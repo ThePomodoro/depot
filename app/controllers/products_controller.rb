@@ -1,6 +1,8 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
+ rescue_from ActiveRecord::RecordNotUnique, with: :invalid_image_url
+
   # GET /products
   # GET /products.json
   def index
@@ -66,6 +68,11 @@ class ProductsController < ApplicationController
     def set_product
       @product = Product.find(params[:id])
     end
+
+  def invalid_image_url
+  	logger.error "Image file already ysed  #{params[:id]}"
+  	redirect_to products_url, notice: 'Image file has already been used'
+  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params

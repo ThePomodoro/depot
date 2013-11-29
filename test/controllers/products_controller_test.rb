@@ -16,6 +16,9 @@ class ProductsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:products)
+    assert_select 'a', 'Show'
+    assert_select 'a', 'Edit'
+    assert_select 'a', 'Destroy'
   end
 
   test "should get new" do
